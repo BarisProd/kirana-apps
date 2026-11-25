@@ -49,6 +49,7 @@ export default function Login() {
           <div className="login-slot" aria-live="polite">
             {err ? <div className="err" role="alert"><Icon name="x" size={16} /><div><b>Belum bisa masuk</b><p>{err}</p></div></div>
               : forgot ? <p className="note-s">Hubungi admin/HR perusahaanmu untuk mengatur ulang password. Tautan reset dikirim ke e-mail terdaftar.</p>
+              : APP ? null // aplikasi karyawan: tanpa tombol akun demo, tiap orang mengetik akunnya sendiri
               : <div className="demo-hint demo-pick"><span>Akun demo (klik untuk mengisi otomatis):</span><div className="demo-chips">{TALENT_ACCOUNTS.filter((a) => !a.pilot && (!APP || getState().employees.some((x) => x.id === a.id))).map((a) => <button key={a.id} type="button" className={email === a.email ? 'on' : ''} onClick={() => { setEmail(a.email); setPw(a.password); setErr('') }} title={a.email}><b>{a.nama.split(' ')[0]}</b><small>{a.ket}</small><small>{a.password}</small></button>)}</div></div>}
           </div>
           <Btn className="full" type="submit" disabled={busy}>{busy ? 'Memeriksa…' : 'Masuk'}</Btn>
