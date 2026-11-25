@@ -13,7 +13,7 @@ import { useInstall, promptInstall } from '../../services/pwa.js'
 import { usePrefs, setPrefs, isNative } from '../appState.js'
 import { fmtDate } from '../../talent/pages/shared.jsx'
 
-const VERSION = '1.2.3'
+const VERSION = '1.2.4'
 const Row = ({ ic, label, value, onClick, danger, badge }) => (
   <button type="button" className={`pf-row ${danger ? 'danger' : ''}`} onClick={onClick}>
     <span className="pf-ic"><Icon name={ic} size={19} /></span><span className="grow">{label}</span>
