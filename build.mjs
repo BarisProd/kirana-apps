@@ -1,0 +1,14 @@
+import { build } from '/opt/npm-tools/node_modules/esbuild/lib/main.js';
+import fs from 'fs';
+// node build.mjs        → web lengkap (dist/index.html)
+// node build.mjs --app  → aplikasi karyawan (dist-app/index.html). Font @fontsource diganti Google Fonts di pratinjau.
+const APP = process.argv.includes('--app')
+const stubFonts = { name:'stub-fontsource', setup(b){ b.onResolve({filter:/^@fontsource\//},()=>({path:'fs',namespace:'stub'})); b.onLoad({filter:/.*/,namespace:'stub'},()=>({contents:'',loader:'css'})) } }
+// Plugin native Capacitor tidak terpasang di lingkungan pratinjau → diganti modul kosong (fitur native otomatis nonaktif)
+const stubNative = { name:'stub-native', setup(b){ b.onResolve({filter:/^(@capacitor\/(haptics|local-notifications)|@aparajita\/capacitor-biometric-auth)$/},(a)=>({path:a.path,namespace:'capstub'})); b.onLoad({filter:/.*/,namespace:'capstub'},()=>({contents:'export const Haptics=undefined, ImpactStyle={}, NotificationType={}, LocalNotifications=undefined, BiometricAuth=undefined; export default {}',loader:'js'})) } }
+const r = await build({ entryPoints:[APP ? 'src/app/main.jsx' : 'src/main.jsx'], plugins:[stubFonts, stubNative], bundle:true, write:false, outdir:'dist', jsx:'automatic', minify:true, format:'iife', target:'es2020',
+  nodePaths:['/opt/npm-tools/node_modules'], loader:{'.css':'css','.png':'dataurl','.webp':'dataurl'},
+  define:{'import.meta.env':'{"VITE_DATA_SOURCE":"mock","MODE":"production"}','process.env.NODE_ENV':'"production"'}, logLevel:'warning'});
+let js='',css='';for(const f of r.outputFiles){if(f.path.endsWith('.js'))js=f.text;if(f.path.endsWith('.css'))css=f.text;}
+const html=`<!DOCTYPE html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0a5950"><link rel="icon" type="image/png" href="data:image/png;base64,${fs.readFileSync('public/favicon.png').toString('base64')}"><link rel="apple-touch-icon" href="data:image/png;base64,${fs.readFileSync('public/apple-touch-icon.png').toString('base64')}"><title>${process.env.KIRANA_TITLE || (APP ? "Kirana Karyawan" : "Kirana HRIS")}</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet"><style>${css}</style></head><body><div id="root"></div><script>${js.replace(/<\/script/g,'<\\/script')}</script></body></html>`;
+const OUT = APP ? 'dist-app' : 'dist';fs.mkdirSync(OUT,{recursive:true});fs.writeFileSync(OUT+'/index.html',html);console.log('ok',(html.length/1024).toFixed(0)+'KB');

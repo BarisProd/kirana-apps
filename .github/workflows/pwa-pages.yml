@@ -1,0 +1,41 @@
+# Terbitkan versi PWA aplikasi karyawan ke GitHub Pages setiap ada perubahan di main.
+# Aktifkan sekali: Settings › Pages › Build and deployment › Source: GitHub Actions.
+# Alamat: https://<akun>.github.io/<repo>/  (buka di HP → menu browser → "Instal aplikasi"/"Tambahkan ke Layar Utama")
+name: PWA (GitHub Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - run: npm run build:app
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-app
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

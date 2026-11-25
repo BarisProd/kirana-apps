@@ -1,0 +1,75 @@
+// Riwayat Blast Notifikasi (dummy) — tersebar Jan–Nov 2026, 3 Branch, 7 kategori, 3 kanal, 4 pengirim.
+export const BLAST_CATS = [
+  ['Pengumuman', 'megaphone', '#2a78d6'],
+  ['Libur & Cuti', 'calendar', '#2f8f4e'],
+  ['Payroll & Gaji', 'wallet', '#7a5af5'],
+  ['Kebijakan HR', 'doc', '#0f8b8d'],
+  ['Pengingat Absensi', 'clock', '#d9a400'],
+  ['Event & Kegiatan', 'star', '#d9663a'],
+  ['Darurat & K3', 'bell', '#c0452a'],
+]
+export const KANAL = [['Keduanya', 'App & E-mail'], ['App', 'App saja'], ['Email', 'E-mail saja']]
+export const kanalLabel = (k) => (KANAL.find(([v]) => v === k) || KANAL[0])[1]
+
+const J = 'Branch Jakarta Digital', B = 'Branch Bandung Tech', S = 'Branch Surabaya Ops'
+const RANI = ['Rani Hapsari', 'Superadmin'], DEWI = ['Dewi Anggraini', 'Admin'], BAYU = ['Bayu Santoso', 'Admin'], RAMA = ['Rama Wijaya', 'Superadmin']
+
+// [tanggal, jam, kategori, kanal, ke, pengirim, judul, isi]
+const RAW = [
+  ['2026-01-02', '08:05', 'Pengumuman', 'Keduanya', 'Semua', RANI, 'Selamat Tahun Baru 2026', 'Terima kasih atas kerja keras di 2025. Semangat menyambut target 2026!'],
+  ['2026-01-07', '07:30', 'Pengingat Absensi', 'App', J, DEWI, 'Clock in sebelum 09:00', 'Mulai pekan ini toleransi telat Jakarta jadi 15 menit.'],
+  ['2026-01-14', '09:10', 'Libur & Cuti', 'Keduanya', 'Semua', RANI, 'Libur Isra Mikraj 16 Januari', 'Kantor libur Jumat, 16 Januari 2026. Operasional Surabaya tetap piket.'],
+  ['2026-01-20', '13:00', 'Kebijakan HR', 'Email', 'Semua', RAMA, 'Pembaruan Peraturan Perusahaan 2026', 'PP 2026 terlampir di e-mail. Mohon dibaca & dikonfirmasi paling lambat 31 Jan.'],
+  ['2026-01-26', '10:00', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip Januari terbit', 'Payslip Januari 2026 bisa dilihat di menu Payslip.'],
+  ['2026-02-03', '16:20', 'Event & Kegiatan', 'App', B, DEWI, 'Townhall Bandung Q1', 'Townhall Bandung Kamis 5 Feb, 15:00 di ruang serbaguna.'],
+  ['2026-02-10', '07:45', 'Darurat & K3', 'Keduanya', S, BAYU, 'Banjir di area gudang', 'Akses gudang timur ditutup sementara. Gunakan pintu barat.'],
+  ['2026-02-12', '11:30', 'Libur & Cuti', 'Keduanya', 'Semua', RANI, 'Cuti bersama Imlek 16 Februari', 'Senin 16 Feb cuti bersama, Selasa 17 Feb libur Imlek.'],
+  ['2026-02-18', '08:00', 'Pengingat Absensi', 'App', S, BAYU, 'Shift Pagi Ops mulai 07:00', 'Mulai 23 Feb jam masuk Shift Pagi Ops maju ke 07:00.'],
+  ['2026-02-25', '10:05', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip Februari terbit', 'Payslip Februari 2026 bisa dilihat di menu Payslip.'],
+  ['2026-03-02', '09:00', 'Kebijakan HR', 'Email', `${J}, ${B}`, DEWI, 'Kebijakan kerja hybrid', 'WFH maksimal 2 hari/pekan, wajib clock in lewat app.'],
+  ['2026-03-09', '14:00', 'Payroll & Gaji', 'Email', 'Semua', RAMA, 'Jadwal pembayaran THR', 'THR dibayarkan 13 Maret 2026 bersama slip terpisah.'],
+  ['2026-03-12', '08:30', 'Libur & Cuti', 'Keduanya', 'Semua', RANI, 'Libur Nyepi & Idulfitri', 'Kantor libur 18–24 Maret. Masuk kembali Rabu, 25 Maret.'],
+  ['2026-03-16', '15:10', 'Event & Kegiatan', 'App', 'Semua', RANI, 'Buka puasa bersama', 'Bukber 17 Maret di masing-masing Branch, 17:30.'],
+  ['2026-03-26', '10:00', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip Maret terbit', 'Payslip Maret 2026 bisa dilihat di menu Payslip.'],
+  ['2026-04-01', '07:50', 'Pengingat Absensi', 'App', B, DEWI, 'Lengkapi absen bulan Maret', '6 karyawan belum clock out di Maret. Ajukan koreksi sebelum 3 April.'],
+  ['2026-04-08', '13:15', 'Darurat & K3', 'Keduanya', J, DEWI, 'Simulasi evakuasi gedung', 'Simulasi kebakaran Kamis 9 April 10:00. Ikuti arahan floor warden.'],
+  ['2026-04-15', '09:30', 'Kebijakan HR', 'Keduanya', S, BAYU, 'SOP APD gudang diperbarui', 'Helm & sepatu safety wajib di area loading mulai 20 April.'],
+  ['2026-04-24', '10:00', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip April terbit', 'Payslip April 2026 bisa dilihat di menu Payslip.'],
+  ['2026-04-29', '11:00', 'Libur & Cuti', 'App', 'Semua', RAMA, 'Libur Hari Buruh 1 Mei', 'Jumat 1 Mei libur nasional.'],
+  ['2026-05-06', '16:00', 'Event & Kegiatan', 'Email', B, DEWI, 'Undangan Family Day', 'Family Day Bandung 10 Juli. Daftar sebelum 30 Mei.'],
+  ['2026-05-11', '08:10', 'Pengingat Absensi', 'Keduanya', J, DEWI, 'Aktifkan lokasi saat clock in', 'Clock in tanpa lokasi akan ditolak mulai 18 Mei.'],
+  ['2026-05-12', '09:00', 'Libur & Cuti', 'Keduanya', 'Semua', RANI, 'Cuti bersama Kenaikan & Iduladha', 'Cuti bersama 15 & 28 Mei. Surabaya mengikuti kalender potong cuti.'],
+  ['2026-05-20', '14:30', 'Darurat & K3', 'App', S, BAYU, 'Forklift #2 rusak', 'Forklift #2 dalam servis. Bongkar muat pakai forklift #1 & #3.'],
+  ['2026-05-26', '10:00', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip Mei terbit', 'Payslip Mei 2026 bisa dilihat di menu Payslip.'],
+  ['2026-06-03', '09:00', 'Kebijakan HR', 'Email', 'Semua', RAMA, 'Penyesuaian plafon reimbursement', 'Plafon kesehatan naik 10% mulai Juli 2026.'],
+  ['2026-06-10', '07:40', 'Pengingat Absensi', 'App', `${B}, ${S}`, BAYU, 'Jadwal shift Juni', 'Cek jadwal shift Juni di app. Tukar shift lewat atasan.'],
+  ['2026-06-17', '15:00', 'Event & Kegiatan', 'Keduanya', J, DEWI, 'Workshop produktivitas', 'Workshop 24 Juni, 13:00–16:00. Kuota 40 orang.'],
+  ['2026-06-25', '10:00', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip Juni terbit', 'Payslip Juni 2026 bisa dilihat di menu Payslip.'],
+  ['2026-07-02', '13:20', 'Darurat & K3', 'Keduanya', B, DEWI, 'Pemadaman listrik terjadwal', 'PLN padam Sabtu 4 Juli 08:00–14:00. Server dimatikan Jumat malam.'],
+  ['2026-07-08', '08:00', 'Libur & Cuti', 'App', B, DEWI, 'Family Day Bandung 10 Juli', 'Kantor Bandung libur perusahaan Jumat 10 Juli.'],
+  ['2026-07-15', '11:45', 'Pengumuman', 'Email', 'Semua', RAMA, 'Hasil survei kepuasan karyawan', 'Skor kepuasan naik ke 4,3/5. Laporan lengkap terlampir.'],
+  ['2026-07-21', '07:35', 'Pengingat Absensi', 'Keduanya', S, BAYU, 'Telat berulang dipotong', 'Telat > 3x/bulan dipotong sesuai aturan Potongan Absensi.'],
+  ['2026-07-27', '10:00', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip Juli terbit', 'Payslip Juli 2026 bisa dilihat di menu Payslip.'],
+  ['2026-08-05', '09:15', 'Event & Kegiatan', 'Keduanya', 'Semua', RANI, 'Lomba 17 Agustus', 'Lomba antar divisi 14 Agustus. Daftar ke panitia Branch.'],
+  ['2026-08-12', '10:30', 'Libur & Cuti', 'Keduanya', 'Semua', RAMA, 'Libur HUT RI 17 Agustus', 'Senin 17 Agustus libur nasional.'],
+  ['2026-08-19', '14:00', 'Kebijakan HR', 'App', J, DEWI, 'Dress code Jumat', 'Jumat boleh batik atau kasual rapi.'],
+  ['2026-08-26', '10:00', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip Agustus terbit', 'Payslip Agustus 2026 bisa dilihat di menu Payslip.'],
+  ['2026-09-02', '08:20', 'Darurat & K3', 'Keduanya', 'Semua', RANI, 'Waspada kualitas udara', 'Gunakan masker di luar ruangan. Kantor sediakan masker di resepsionis.'],
+  ['2026-09-09', '16:10', 'Pengumuman', 'App', S, BAYU, 'Gudang baru beroperasi', 'Gudang Rungkut mulai beroperasi 14 Sept.'],
+  ['2026-09-16', '07:55', 'Pengingat Absensi', 'App', J, DEWI, 'Koreksi absen via app', 'Pengajuan koreksi absen kini bisa langsung dari app.'],
+  ['2026-09-25', '10:00', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip September terbit', 'Payslip September 2026 bisa dilihat di menu Payslip.'],
+  ['2026-10-01', '09:00', 'Kebijakan HR', 'Keduanya', 'Semua', RANI, 'Penilaian kinerja semester 2', 'Isi self-assessment di app paling lambat 15 Oktober.'],
+  ['2026-10-07', '13:30', 'Event & Kegiatan', 'App', S, BAYU, 'Donor darah', 'Donor darah bersama PMI 12 Oktober, 09:00–12:00.'],
+  ['2026-10-14', '08:00', 'Darurat & K3', 'Email', B, DEWI, 'Laporan insiden kecil', 'Mohon isi form insiden paling lambat 1×24 jam setelah kejadian.'],
+  ['2026-10-20', '15:30', 'Pengumuman', 'Keduanya', `${J}, ${S}`, RAMA, 'Pergantian kepala Branch', 'Rudi Hartanta resmi jadi Supervisor Operasional Surabaya.'],
+  ['2026-10-26', '10:00', 'Payroll & Gaji', 'Keduanya', 'Semua', RANI, 'Payslip Oktober terbit', 'Payslip Oktober 2026 bisa dilihat di menu Payslip.'],
+  ['2026-11-02', '07:30', 'Pengingat Absensi', 'Keduanya', 'Semua', RANI, 'Cut-off absensi November', 'Cut-off absensi mengikuti kalender kerja Branch. Cek rekapmu.'],
+  ['2026-11-04', '11:00', 'Kebijakan HR', 'Email', `${B}, ${S}`, BAYU, 'Pengembalian inventaris saat resign', 'Inventaris wajib dikembalikan sebelum hari terakhir kerja.'],
+  ['2026-11-10', '09:00', 'Libur & Cuti', 'Keduanya', 'Semua', RANI, 'Pengumuman Cuti Bersama Akhir Tahun', 'Kantor libur cuti bersama 24–26 Desember 2026.'],
+  ['2026-11-13', '16:45', 'Event & Kegiatan', 'Keduanya', 'Semua', RAMA, 'Gathering akhir tahun', 'Gathering 12 Desember di Bandung. Transport disediakan.'],
+  ['2026-11-17', '08:15', 'Darurat & K3', 'App', J, DEWI, 'Lift gedung B dalam perbaikan', 'Gunakan tangga darurat atau lift gedung A sampai 21 Nov.'],
+  ['2026-11-18', '14:20', 'Pengumuman', 'Keduanya', B, DEWI, 'Ruang laktasi baru', 'Ruang laktasi lantai 2 Bandung sudah bisa dipakai.'],
+  ['2026-11-19', '10:40', 'Pengumuman', 'Email', 'Semua', RANI, 'Open enrollment asuransi', 'Daftarkan tanggungan keluarga sebelum 30 November.'],
+]
+
+export const seedBlasts = () => RAW.map(([tanggal, jam, kategori, kanal, ke, [oleh, peran], judul, isi], i) => ({ id: 'bl' + i, tanggal, jam, kategori, kanal, ke, oleh, peran, judul, isi })).reverse()

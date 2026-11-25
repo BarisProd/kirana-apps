@@ -1,0 +1,12 @@
+{
+  "appId": "id.kirana.karyawan",
+  "appName": "Kirana",
+  "webDir": "dist-app",
+  "android": {
+    "allowMixedContent": false,
+    "backgroundColor": "#f5f5eb"
+  },
+  "plugins": {
+    "SplashScreen": { "launchShowDuration": 800, "backgroundColor": "#f5f5eb" }
+  }
+}

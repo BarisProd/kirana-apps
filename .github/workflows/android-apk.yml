@@ -1,0 +1,85 @@
+# Build APK aplikasi karyawan Kirana setiap ada perubahan di branch main.
+# Hasil: Actions › run terbaru › Artifacts › "Kirana-Karyawan-APK".
+# Push tag v* (mis. v1.0.1) → APK juga dilampirkan ke halaman Releases supaya mudah dibagikan.
+name: Android APK
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      APP_VERSION_CODE: ${{ github.run_number }}
+      HAS_KEYSTORE: ${{ secrets.KIRANA_KEYSTORE_BASE64 != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Nama versi
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then echo "APP_VERSION_NAME=${GITHUB_REF_NAME#v}" >> $GITHUB_ENV;
+          else echo "APP_VERSION_NAME=$(node -p "require('./package.json').version")-build.${{ github.run_number }}" >> $GITHUB_ENV; fi
+
+      - name: Pasang dependensi
+        run: npm install --no-audit --no-fund
+
+      - name: Build web aplikasi karyawan
+        run: npm run build:app
+
+      - name: Siapkan proyek Android
+        run: |
+          [ -d android ] || npx cap add android
+          npx @capacitor/assets generate --android --assetPath assets --iconBackgroundColor '#f5f5eb' --splashBackgroundColor '#f5f5eb' --splashBackgroundColorDark '#0b1f1c'
+          npx cap sync android
+
+      - name: Keystore rilis (opsional, dari Secrets)
+        if: env.HAS_KEYSTORE == 'true'
+        run: |
+          echo "${{ secrets.KIRANA_KEYSTORE_BASE64 }}" | base64 -d > $RUNNER_TEMP/kirana.jks
+          echo "KIRANA_KEYSTORE_PATH=$RUNNER_TEMP/kirana.jks" >> $GITHUB_ENV
+
+      - name: Izin, versi, tanda tangan
+        env:
+          KIRANA_KEYSTORE_PASSWORD: ${{ secrets.KIRANA_KEYSTORE_PASSWORD }}
+          KIRANA_KEY_ALIAS: ${{ secrets.KIRANA_KEY_ALIAS }}
+          KIRANA_KEY_PASSWORD: ${{ secrets.KIRANA_KEY_PASSWORD }}
+        run: npm run android:prepare
+
+      - name: Build APK
+        working-directory: android
+        env:
+          KIRANA_KEYSTORE_PASSWORD: ${{ secrets.KIRANA_KEYSTORE_PASSWORD }}
+          KIRANA_KEY_ALIAS: ${{ secrets.KIRANA_KEY_ALIAS }}
+          KIRANA_KEY_PASSWORD: ${{ secrets.KIRANA_KEY_PASSWORD }}
+        run: |
+          chmod +x gradlew
+          if [ -n "$KIRANA_KEYSTORE_PATH" ]; then ./gradlew assembleRelease --no-daemon; cp app/build/outputs/apk/release/app-release.apk ../Kirana-Karyawan-$APP_VERSION_NAME.apk;
+          else ./gradlew assembleDebug --no-daemon; cp app/build/outputs/apk/debug/app-debug.apk ../Kirana-Karyawan-$APP_VERSION_NAME.apk; fi
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Kirana-Karyawan-APK
+          path: Kirana-Karyawan-*.apk
+          retention-days: 30
+
+      - name: Lampirkan ke Releases (khusus tag v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Kirana-Karyawan-*.apk

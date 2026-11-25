@@ -1,0 +1,23 @@
+{
+  "name": "Kirana Karyawan",
+  "short_name": "Kirana",
+  "description": "Absen, cuti, lembur, reimburse, dan payslip karyawan. Absen tetap bisa saat sinyal lemah.",
+  "id": "./",
+  "start_url": "./#/",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f5eb",
+  "theme_color": "#0a5950",
+  "lang": "id",
+  "categories": ["business", "productivity"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Absen", "url": "./#/app/talent/beranda", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] },
+    { "name": "Riwayat absen", "url": "./#/app/talent/riwayat", "icons": [{ "src": "icon-192.png", "sizes": "192x192" }] }
+  ]
+}

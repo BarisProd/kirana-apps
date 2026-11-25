@@ -1,0 +1,11 @@
+node_modules/
+dist/
+dist-app/
+# Proyek Android dibuat ulang otomatis oleh GitHub Actions (npx cap add android)
+android/
+ios/
+*.apk
+*.jks
+*.keystore
+.env
+.env.local
