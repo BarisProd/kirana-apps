@@ -4,9 +4,14 @@
   "webDir": "dist-app",
   "android": {
     "allowMixedContent": false,
-    "backgroundColor": "#f5f5eb"
+    "backgroundColor": "#0a5950"
   },
   "plugins": {
-    "SplashScreen": { "launchShowDuration": 800, "backgroundColor": "#f5f5eb" }
+    "SplashScreen": {
+      "launchShowDuration": 200,
+      "launchAutoHide": true,
+      "backgroundColor": "#0a5950",
+      "showSpinner": false
+    }
   }
 }

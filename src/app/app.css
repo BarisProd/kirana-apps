@@ -270,3 +270,61 @@
 @keyframes obIn { from { opacity:0 } to { opacity:1 } }
 @keyframes obStep { from { opacity:0; transform:translateY(10px) } to { opacity:1; transform:none } }
 @media (prefers-reduced-motion:reduce) { .ob, .ob-body { animation:none } }
+
+/* ---------- Masuk (layar HP): putih penuh, kolom seragam ---------- */
+.kirana-app .ta .pw { position:relative; display:block }
+.kirana-app .ta .pw input { width:100%; padding-right:52px }
+.kirana-app .ta .pw .icon-btn { position:absolute; right:4px; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:12px }
+.kirana-app .ta .login-fields input { height:52px; min-height:52px; border-radius:14px; font-size:16px }
+.kirana-app .ta .login-slot { min-height:0 }
+.kirana-app .ta .login-slot:empty { display:none }
+@media (max-width:899px) {
+  .kirana-app .ta .login { background:#fff; place-items:start stretch; min-height:100dvh;
+    padding:calc(env(safe-area-inset-top) + 36px) 24px calc(env(safe-area-inset-bottom) + 24px) }
+  .kirana-app .ta .login-wrap { box-shadow:none; border-radius:0; background:transparent; max-width:440px; margin:0 auto; width:100% }
+  .kirana-app .ta .login .login-card { padding:0; gap:22px; align-content:start }
+  .kirana-app .ta .login-logo-m { display:block; margin-bottom:12px }
+  .kirana-app .ta .login-card h1 { font-size:28px; margin-bottom:6px }
+  .kirana-app .ta .login-row { margin-top:-6px }
+  .kirana-app .ta .login-card .btn.full { min-height:54px; border-radius:16px; font-size:16.5px; margin-top:4px }
+  .kirana-app .ta .login-card > p.muted.sm { font-size:12.5px; margin-top:8px; line-height:1.5 }
+}
+
+/* ---------- Absen 2 langkah: (1) kamera tegak penuh, (2) cek & konfirmasi ---------- */
+.ac { position:fixed; inset:0; z-index:70; display:grid; grid-template-rows:auto minmax(0,1fr) auto; animation:acIn .22s ease-out }
+.ac-cam { background:#0b1512; color:#fff }
+.ac-form { background:var(--cream,#f5f5eb); color:var(--ink) }
+.ac-top { display:grid; grid-template-columns:44px minmax(0,1fr) auto; align-items:center; gap:8px; padding:calc(env(safe-area-inset-top) + 8px) 12px 8px }
+.ac-top b { font:700 17px Poppins,sans-serif; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.ac-x { width:44px; height:44px; border:0; border-radius:14px; background:transparent; color:inherit; display:grid; place-items:center }
+.ac-cam .ac-x { background:rgba(255,255,255,.1) }
+.ac-loc { display:inline-flex; align-items:center; gap:5px; max-width:52vw; padding:6px 10px; border-radius:99px; background:rgba(255,255,255,.12); font:700 12.5px Nunito,sans-serif; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+.ac-loc.ok { background:rgba(120,200,140,.22); color:#c9f2d3 } .ac-loc.warn { background:rgba(249,215,48,.2); color:#fbe98a }
+.ac-view { position:relative; margin:4px 12px 0; border-radius:28px; overflow:hidden; background:#000; display:grid; place-items:center; min-height:0 }
+.ac-view video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover }
+.ac-view .mirror { transform:scaleX(-1) }
+.ac-view.flash::after { content:""; position:absolute; inset:0; background:#fff; opacity:.75 }
+.ac-view .cam-err { background:#16211e; color:#fff } .ac-view .cam-err p { color:#c5d2ce }
+.ac-oval { position:absolute; left:50%; top:46%; width:68%; max-width:300px; aspect-ratio:3/4; transform:translate(-50%,-50%); border-radius:50%;
+  border:3px solid rgba(255,255,255,.9); box-shadow:0 0 0 9999px rgba(0,0,0,.38); pointer-events:none }
+.ac-load { position:relative; z-index:1; font-weight:700 }
+.ac-bottom { display:grid; justify-items:center; gap:10px; padding:14px 20px calc(env(safe-area-inset-bottom) + 18px) }
+.ac-tip { margin:0; min-height:20px; font-size:14.5px; color:#dfe8e5 }
+.ac-off { margin:0; display:inline-flex; gap:6px; align-items:center; font-size:13px; color:#fbe98a }
+.ac-shutter { width:78px; height:78px; border-radius:50%; border:5px solid #fff; background:transparent; display:grid; place-items:center; padding:0 }
+.ac-shutter span { width:60px; height:60px; border-radius:50%; background:var(--y,#f9d730); transition:transform .1s }
+.ac-shutter:active span { transform:scale(.9) }
+.ac-shutter:disabled { opacity:.4 }
+.ac-sample { border:0; background:none; color:#fbe98a; font:700 13.5px Nunito,sans-serif; text-decoration:underline; min-height:40px }
+.ac-body { overflow:auto; padding:4px 16px 16px; display:grid; gap:14px; align-content:start }
+.ac-photo { display:flex; gap:14px; align-items:center; background:#fff; border-radius:20px; padding:12px }
+.ac-photo img { width:96px; height:128px; object-fit:cover; border-radius:14px; flex:none; background:#000 }
+.ac-photo .grow { display:grid; gap:4px; justify-items:start }
+.ac-photo b { font:700 16px Poppins,sans-serif } .ac-photo small { color:var(--mut); font-size:13.5px }
+.ac-retake { margin-top:6px; display:inline-flex; gap:6px; align-items:center; min-height:40px; padding:0 14px; border-radius:12px; border:1.5px solid var(--line); background:#fff; color:var(--g); font:800 14px Nunito,sans-serif }
+.ac-body .gps-box { background:#fff }
+.ac-foot { display:grid; gap:6px; padding:12px 16px calc(env(safe-area-inset-bottom) + 14px); background:#fff; border-top:1px solid var(--line) }
+.ac-foot small { text-align:center; color:var(--mut); font-weight:700; font-size:13px }
+.ac-foot .btn { min-height:54px; border-radius:16px; font-size:16.5px; width:100% }
+@keyframes acIn { from { opacity:0; transform:translateY(16px) } to { opacity:1; transform:none } }
+@media (prefers-reduced-motion:reduce) { .ac { animation:none } }

@@ -19,7 +19,7 @@ import { deviceClock, hhmm, isoDate } from '../../services/deviceClock.js'
 import { fmtDate } from '../pages/shared.jsx'
 
 // Pratinjau web (kamera sering diblokir di bingkai pratinjau): foto contoh berinisial. Tidak muncul di aplikasi Android.
-function sampleSelfie(name = 'K') {
+export function sampleSelfie(name = 'K') {
   try { const c = document.createElement('canvas'); c.width = 360; c.height = 480; const x = c.getContext('2d')
     const g = x.createLinearGradient(0, 0, 0, 480); g.addColorStop(0, '#c1d276'); g.addColorStop(1, '#0a5950'); x.fillStyle = g; x.fillRect(0, 0, 360, 480)
     x.fillStyle = '#f5f5eb'; x.beginPath(); x.arc(180, 190, 90, 0, 7); x.fill(); x.fillRect(70, 300, 220, 200)
@@ -51,7 +51,8 @@ export function NetBanner({ go, onlyFailed }) {
   )
 }
 
-export function ClockModal({ kind, me, onClose, onDone }) {
+// Logika absen (dipakai bersama: modal web & layar absen 2 langkah di aplikasi)
+export function useClockForm(kind, me, onDone) {
   const s = useStore(); const { online } = useNet()
   const set = s.absenSetup?.[me.branch] || {}; const mode = set.mode || { WFO: true, WFA: false }
   const sehat = (set.kesehatan || []).filter((x) => x.aktif)
@@ -66,7 +67,6 @@ export function ClockModal({ kind, me, onClose, onDone }) {
       .then((p) => { setGps(p); setBusy(false) }).catch((e) => { setGErr(e); setBusy(false) })
   }
   useEffect(() => { if (kind) { setFoto(''); setKes(''); setErr(''); setNoGps(false); setGps(null); locate() } }, [kind])
-  if (!kind) return null
   const near = gps ? nearestOffice(gps, set.lokasi) : null
   const inRadius = near && near.jarak <= (near.radius || 100)
   const absenMode = mode.WFO && inRadius ? 'WFO' : mode.WFA ? 'WFA' : 'WFO'
@@ -82,11 +82,14 @@ export function ClockModal({ kind, me, onClose, onDone }) {
       onDone(rec)
     } catch (e) { setErr(e.message || 'Absen belum bisa disimpan.') } finally { setSaving(false) }
   }
+  return { set, mode, sehat, off, online, foto, setFoto, gps, gErr, busy, kes, setKes, saving, err, noGps, setNoGps, locate, near, inRadius, absenMode, blockedRadius, blockedOffline, needKes, can, save }
+}
+
+// Status lokasi absen (kantor terdekat, radius, akurasi) + pilihan lanjut tanpa lokasi
+export function GpsBox({ f }) {
+  const { mode, gps, gErr, busy, noGps, setNoGps, locate, near, inRadius, absenMode, blockedRadius } = f
   return (
-    <Modal open title={window.KIRANA_APP ? (kind === 'in' ? 'Absen masuk' : 'Absen pulang') : kind === 'in' ? 'Clock in' : 'Clock out'} onClose={onClose} footer={<><Btn kind="ghost" onClick={onClose}>Batal</Btn><Btn disabled={!can} onClick={save}>{saving ? 'Menyimpan…' : `Konfirmasi ${kind === 'in' ? 'masuk' : 'pulang'}`}</Btn></>}>
-      {!online && <Note><div><b>Offline.</b> {off.aktif ? `Absenmu disimpan di HP dan dikirim otomatis saat sinyal kembali (batas ${off.batasJam} jam; lewat dari itu perlu persetujuan HR).` : 'Branch-mu belum mengizinkan absen offline. Cari sinyal dulu, ya.'}</div></Note>}
-      <SelfieCamera value={foto} onChange={setFoto} label={kind === 'in' ? 'Selfie masuk' : 'Selfie pulang'} />
-      {!foto && !window.Capacitor?.isNativePlatform?.() && <button type="button" className="lnk" style={{ justifySelf: 'center' }} onClick={() => setFoto(sampleSelfie(me.name))}>Kamera tidak bisa dipakai di pratinjau? Pakai foto contoh</button>}
+    <>
       <div className={`gps-box ${blockedRadius ? 'bad' : gps ? 'ok' : ''}`}>
         <Icon name="pin" size={18} />
         <div className="grow">{busy ? 'Mencari lokasimu… (GPS tetap jalan tanpa sinyal data)'
@@ -98,6 +101,20 @@ export function ClockModal({ kind, me, onClose, onDone }) {
       </div>
       {gErr && !noGps && !busy && <button type="button" className="lnk" onClick={() => setNoGps(true)}>Lanjut tanpa lokasi (perlu dicek HR)</button>}
       {blockedRadius && <p className="err-t" style={{ margin: 0 }}>Kamu di luar radius kantor. Absen di Branch ini hanya bisa dari lokasi kantor.</p>}
+    </>
+  )
+}
+
+export function ClockModal({ kind, me, onClose, onDone }) {
+  const f = useClockForm(kind, me, onDone)
+  if (!kind) return null
+  const { mode, sehat, off, online, foto, setFoto, gps, gErr, busy, kes, setKes, saving, err, noGps, setNoGps, locate, near, inRadius, absenMode, blockedRadius, needKes, can, save } = f
+  return (
+    <Modal open title={window.KIRANA_APP ? (kind === 'in' ? 'Absen masuk' : 'Absen pulang') : kind === 'in' ? 'Clock in' : 'Clock out'} onClose={onClose} footer={<><Btn kind="ghost" onClick={onClose}>Batal</Btn><Btn disabled={!can} onClick={save}>{saving ? 'Menyimpan…' : `Konfirmasi ${kind === 'in' ? 'masuk' : 'pulang'}`}</Btn></>}>
+      {!online && <Note><div><b>Offline.</b> {off.aktif ? `Absenmu disimpan di HP dan dikirim otomatis saat sinyal kembali (batas ${off.batasJam} jam; lewat dari itu perlu persetujuan HR).` : 'Branch-mu belum mengizinkan absen offline. Cari sinyal dulu, ya.'}</div></Note>}
+      <SelfieCamera value={foto} onChange={setFoto} label={kind === 'in' ? 'Selfie masuk' : 'Selfie pulang'} />
+      {!foto && !window.Capacitor?.isNativePlatform?.() && <button type="button" className="lnk" style={{ justifySelf: 'center' }} onClick={() => setFoto(sampleSelfie(me.name))}>Kamera tidak bisa dipakai di pratinjau? Pakai foto contoh</button>}
+      <GpsBox f={f} />
       {needKes && <fieldset className="kes-pick"><legend className="field-l">Kondisi kesehatan hari ini</legend><div className="chips">{sehat.map((x) => <button key={x.id} type="button" className={`chip ${kes === x.nama ? 'on' : ''}`} aria-pressed={kes === x.nama} onClick={() => setKes(x.nama)}>{x.nama}</button>)}</div></fieldset>}
       {err && <p className="err-t" role="alert" style={{ margin: 0 }}>{err}</p>}
       <p className="muted sm" style={{ margin: 0 }}>Jam absen dicatat {hhmm(deviceClock.deviceNow()).replace(':', '.')} di HP ini. Server mencocokkan ulang jam & lokasinya saat data terkirim.</p>

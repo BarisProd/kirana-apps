@@ -13,11 +13,15 @@ export async function openCamera({ audio = false } = {}) {
 export const stopStream = (stream) => { if (stream) stream.getTracks().forEach((t) => t.stop()) }
 
 // Ambil satu bingkai dari <video> menjadi JPEG (dicerminkan seperti yang dilihat pengguna).
-export function captureFrame(video, { mirror = true, quality = 0.85, maxW = 960 } = {}) {
-  const w = video.videoWidth || 640; const h = video.videoHeight || 480; const k = Math.min(1, maxW / w)
-  const c = document.createElement('canvas'); c.width = Math.round(w * k); c.height = Math.round(h * k)
+// aspect (lebar/tinggi) opsional: potong tengah agar hasil sama dengan yang terlihat di layar (mis. bingkai tegak 3:4)
+export function captureFrame(video, { mirror = true, quality = 0.85, maxW = 960, aspect = 0 } = {}) {
+  const vw = video.videoWidth || 640; const vh = video.videoHeight || 480
+  let sx = 0, sy = 0, sw = vw, sh = vh
+  if (aspect) { if (vw / vh > aspect) { sw = Math.round(vh * aspect); sx = Math.round((vw - sw) / 2) } else { sh = Math.round(vw / aspect); sy = Math.round((vh - sh) / 2) } }
+  const k = Math.min(1, maxW / Math.max(sw, sh))
+  const c = document.createElement('canvas'); c.width = Math.round(sw * k); c.height = Math.round(sh * k)
   const ctx = c.getContext('2d'); if (mirror) { ctx.translate(c.width, 0); ctx.scale(-1, 1) }
-  ctx.drawImage(video, 0, 0, c.width, c.height)
+  ctx.drawImage(video, sx, sy, sw, sh, 0, 0, c.width, c.height)
   return c.toDataURL('image/jpeg', quality)
 }
 

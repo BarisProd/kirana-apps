@@ -45,7 +45,7 @@ jobs:
       - name: Siapkan proyek Android
         run: |
           [ -d android ] || npx cap add android
-          npx @capacitor/assets generate --android --assetPath assets --iconBackgroundColor '#f5f5eb' --splashBackgroundColor '#f5f5eb' --splashBackgroundColorDark '#0b1f1c'
+          npx @capacitor/assets generate --android --assetPath assets --iconBackgroundColor '#f5f5eb' --splashBackgroundColor '#0a5950' --splashBackgroundColorDark '#0a5950'
           npx cap sync android
 
       - name: Keystore rilis (opsional, dari Secrets)

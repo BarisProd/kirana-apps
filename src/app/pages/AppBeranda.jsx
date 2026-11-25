@@ -4,7 +4,8 @@ import React, { useEffect, useState } from 'react'
 import { useStore } from '../../services/store.js'
 import { ME } from '../../talent/services/session.js'
 import { Icon, Avatar, Btn, Modal } from '../../talent/components/ui.jsx'
-import { ClockModal, SyncChip } from '../../talent/components/OfflineAbsen.jsx'
+import { SyncChip } from '../../talent/components/OfflineAbsen.jsx'
+import { AppClock } from './AppClock.jsx'
 import { kerjaInfo } from '../../talent/pages/talent.jsx'
 import { PAGES } from '../../talent/pages/Shell.jsx'
 import { aktifCuti, fmtDate } from '../../talent/pages/shared.jsx'
@@ -113,7 +114,7 @@ function Absen({ go, s0, phase }) {
         <button type="button" className="icon-btn" aria-label="Sembunyikan" onClick={() => setPrefs({ sembunyiInstal: true })}><Icon name="x" size={18} /></button>
       </section>}
 
-      {cam && <ClockModal kind={cam} me={me} onClose={() => setCam(null)} onDone={(rec) => { setCam(null); haptic.success(); setDone(rec) }} />}
+      {cam && <AppClock kind={cam} me={me} onClose={() => setCam(null)} onDone={(rec) => { setCam(null); haptic.success(); setDone(rec) }} />}
       <Modal open={early} title="Belum jam pulang" onClose={() => setEarly(false)} footer={<><Btn kind="ghost" onClick={() => setEarly(false)}>Nanti saja</Btn><Btn onClick={() => { setEarly(false); setCam('out') }}>Tetap absen pulang</Btn></>}>
         <p style={{ margin: 0 }}>Jam pulang {sh.nama} mulai <b>{dot(sh.pulangDari)}</b>. Absen pulang sekarang akan tercatat pulang lebih awal. Absen pulang hanya bisa sekali per hari.</p>
       </Modal>
