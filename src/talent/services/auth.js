@@ -6,13 +6,16 @@ export const TALENT_ACCOUNTS = [
   { id: 'p2', email: 'salsa.nabila@contoh.id', password: 'salsa123', nama: 'Salsa Nabila', ket: 'Pelamar, belum punya kontrak' },
   { id: 'p5', email: 'rendi.firmansyah@contoh.id', password: 'rendi123', nama: 'Rendi Firmansyah', ket: 'Sedang proses hiring' },
   { id: 'h12', email: 'ani.suryadi@hamparanalam.co.id', password: '123', nama: 'Ani Suryadi', ket: 'Hamparan Alam · Pemanen' },
+  // Akun uji coba tim (25 Nov): semuanya karyawan aktif dengan data contoh yang sama seperti Putri (e5);
+  // yang berbeda hanya nama yang tampil. Tidak muncul sebagai tombol isi otomatis (pilot: true).
+  ...['Rizki', 'Fina', 'Bagas', 'Andri', 'Agiet', 'Listya'].map((n) => ({ id: 'e5', email: n.toLowerCase() + '@contoh.id', password: n.toLowerCase() + '123', nama: n, ket: 'Karyawan aktif', pilot: true })),
 ]
 export const validEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v).trim())
 
 export async function signIn(email, password) {
   await new Promise((r) => setTimeout(r, 350))
   const t = TALENT_ACCOUNTS.find((a) => a.email.toLowerCase() === String(email).trim().toLowerCase() && a.password === password)
-  return t ? { ok: true, user: { role: 'talent', id: t.id, email: t.email, nama: t.nama } } : { ok: false, error: 'E-mail atau password salah.' }
+  return t ? { ok: true, user: { role: 'talent', id: t.id, email: t.email, nama: t.nama, pilot: !!t.pilot } } : { ok: false, error: 'E-mail atau password salah.' }
 }
 
 // Akun demo boleh memakai password pendek (mis. '123'); akun lain tetap minimal 6 karakter

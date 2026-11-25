@@ -5,6 +5,9 @@ import { HashRouter, useLocation, useNavigate } from '../lib/router.jsx'
 import { TalentLogin } from '../talent/TalentApp.jsx'
 import AppShell from './AppShell.jsx'
 import { hasSession } from '../talent/services/session.js'
+import { applyAlias } from '../talent/services/alias.js'
+
+applyAlias() // akun uji coba yang masih login: pasang lagi namanya setelah aplikasi dibuka ulang
 
 function Routes() {
   const { pathname } = useLocation(); const nav = useNavigate()
